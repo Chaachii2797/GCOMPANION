@@ -14,10 +14,12 @@
     >
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imProfilePic"
         android:layout_width="wrap_content"
         android:layout_height="88dp"
         android:layout_gravity="center"
+        android:clickable="true"
+        android:onClick="onClickProfile"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         app:srcCompat="@drawable/profile" />
 

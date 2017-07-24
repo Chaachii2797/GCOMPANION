@@ -29,6 +29,14 @@
         </activity>
 
         <activity android:name=".MainActivity"/>
+        <activity android:name=".ImageRecognitionTags" />
+        <activity android:name=".CaptureDIY" />
+        <activity android:name=".Profile" />
+        <activity android:name=".Messaging" />
+        <activity android:name=".Calendar" />
+        <activity android:name=".Wishlists" />
+        <activity android:name=".SalesReport" />
+        <activity android:name=".About"></activity>
 
     </application>
 

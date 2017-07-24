@@ -7,9 +7,9 @@
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/black"
-        android:textAlignment="center"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:background="@color/bg_screen1"
+        android:text="Search for a specific DIY or category."
+        android:gravity="center"
+        android:textSize="30sp"/>
 
 </LinearLayout>
