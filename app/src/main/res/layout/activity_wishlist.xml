@@ -22,17 +22,6 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="56dp" />
 
-    <GridView
-        android:id="@+id/gv_wish"
-        android:layout_width="370dp"
-        android:layout_height="454dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5"
-        app:layout_constraintVertical_bias="1.0"
-        tools:layout_editor_absoluteX="7dp" />
-
     <ImageButton
         android:id="@+id/ibBlack"
         android:layout_width="40dp"
@@ -49,5 +38,41 @@
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/textView9"
         app:layout_constraintVertical_bias="0.0" />
+
+    <FrameLayout
+        android:id="@+id/wishlistLayout1"
+        android:layout_width="160dp"
+        android:layout_height="230dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/frame_border"
+        android:clickable="true"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/layoutTwo"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="33dp"
+        app:layout_constraintTop_toBottomOf="@+id/textView5"
+        app:layout_constraintHorizontal_bias="0.625">
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/wishlistLayout2"
+        android:layout_width="160dp"
+        android:layout_height="230dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/layoutOne"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/frame_border"
+        android:clickable="true"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="33dp"
+        app:layout_constraintTop_toBottomOf="@+id/textView5">
+
+    </FrameLayout>
+
 
 </android.support.constraint.ConstraintLayout>
