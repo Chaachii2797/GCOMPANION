@@ -36,7 +36,9 @@
         <activity android:name=".Calendar" />
         <activity android:name=".Wishlists" />
         <activity android:name=".SalesReport" />
-        <activity android:name=".About"></activity>
+        <activity android:name=".About"/>
+        <activity android:name=".HomePicture1"/>
+        <activity android:name=".HomePicture2"/>
 
     </application>
 
