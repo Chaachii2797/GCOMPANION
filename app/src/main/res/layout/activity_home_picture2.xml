@@ -8,12 +8,12 @@
     android:weightSum="1">
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/imageHolder"
         android:layout_width="326dp"
         android:layout_height="267dp"
         android:layout_gravity="center"
         android:layout_marginTop="22dp"
-        app:srcCompat="@drawable/plastic_lamp"
+        app:srcCompat="@mipmap/plastic_lamp"
         tools:layout_editor_absoluteX="29dp"
         tools:layout_editor_absoluteY="16dp"
         android:background="@drawable/frame_border"
@@ -34,7 +34,7 @@
         tools:layout_editor_absoluteX="109dp"
         tools:layout_editor_absoluteY="294dp"
         android:background="@drawable/frame_border"
-        android:layout_below="@+id/imageView4"
+        android:layout_below="@+id/imageHolder"
         android:layout_centerHorizontal="true" />
 
     <TextView

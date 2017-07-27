@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity
 
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
+
         rotate_forward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_forward);
         rotate_backward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_backward);
         fab.setOnClickListener(this);
@@ -162,11 +163,11 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.fab1:
 
-                Log.d("Camera", "Fab 1");
+                Log.d("CaptureDIY", "Fab 1");
                 break;
             case R.id.fab2:
 
-                Log.d("Camera", "Fab 2");
+                Log.d("CaptureDIY", "Fab 2");
                 break;
         }
     }
@@ -180,7 +181,7 @@ public class MainActivity extends AppCompatActivity
             fab1.setClickable(false);
             fab2.setClickable(false);
             isFabOpen = false;
-            Log.d("Camera", "close");
+            Log.d("CaptureDIY", "close");
         } else {
             fab.startAnimation(rotate_forward);
             fab1.startAnimation(fab_open);
@@ -188,7 +189,7 @@ public class MainActivity extends AppCompatActivity
             fab1.setClickable(true);
             fab2.setClickable(true);
             isFabOpen = true;
-            Log.d("Camera","open");
+            Log.d("CaptureDIY","open");
 
         }
     }
@@ -337,7 +338,8 @@ public class MainActivity extends AppCompatActivity
                 startActivity(about);
                 break;
             case R.id.nav_logout:
-                finish();
+                Intent logout = new Intent(MainActivity.this,WelcomeActivity.class);
+                startActivity(logout);
                 break;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

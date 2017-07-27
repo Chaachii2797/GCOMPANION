@@ -1,0 +1,107 @@
+{
+  "project_info": {
+    "project_number": "873136417041",
+    "firebase_url": "https://gcomp-8e552.firebaseio.com",
+    "project_id": "gcomp-8e552",
+    "storage_bucket": "gcomp-8e552.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:873136417041:android:32be5dd603a3ac4f",
+        "android_client_info": {
+          "package_name": "com.example.cicctuser.gcomp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "873136417041-7p4u06mk369c274ht4q8ntgf0qsq9cku.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cicctuser.gcomp",
+            "certificate_hash": "2b8fd0d000450d006769e05d5d3db292aec60211"
+          }
+        },
+        {
+          "client_id": "873136417041-2rm1p2nba1fqg5mdnkv710oe76n2om8m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cicctuser.gcomp",
+            "certificate_hash": "7ae439705189c9a1e112dd3dc1aa05c2c9f3807e"
+          }
+        },
+        {
+          "client_id": "873136417041-m4t1gjuvou650p59c6g5g9f8guhj6mng.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPqXIbPwLjxd95LmWUSfsFveq0rz8SPfA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "873136417041-m4t1gjuvou650p59c6g5g9f8guhj6mng.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:873136417041:android:0566d2710991aab9",
+        "android_client_info": {
+          "package_name": "cabiso.daphny.com.gcompanion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "873136417041-8eh0jq7sb5i6c6ghgrkrv5hacvu2brgh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cabiso.daphny.com.gcompanion",
+            "certificate_hash": "7ae439705189c9a1e112dd3dc1aa05c2c9f3807e"
+          }
+        },
+        {
+          "client_id": "873136417041-m4t1gjuvou650p59c6g5g9f8guhj6mng.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPqXIbPwLjxd95LmWUSfsFveq0rz8SPfA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "873136417041-m4t1gjuvou650p59c6g5g9f8guhj6mng.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

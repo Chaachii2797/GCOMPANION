@@ -1,0 +1,20 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="cabiso.daphny.com.gcompanion.Fragments.ImageHolder">
+
+    <!-- TODO: Update blank fragment layout -->
+    <ImageView
+        android:id="@+id/imageHolder"
+        android:layout_width="326dp"
+        android:layout_height="267dp"
+        android:layout_gravity="center"
+        tools:layout_editor_absoluteX="29dp"
+        tools:layout_editor_absoluteY="16dp"
+        android:background="@drawable/frame_border"
+        android:layout_marginTop="21dp"
+        android:layout_below="@+id/textView11"
+        android:layout_centerHorizontal="true" />
+
+</FrameLayout>

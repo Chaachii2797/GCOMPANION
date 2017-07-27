@@ -17,8 +17,7 @@ public class Picture01 extends Fragment {
     public Picture01() {
                 // Required empty public constructor
                     }
-
-
+    
     @Override
      public View onCreateView(LayoutInflater inflater, ViewGroup container,
                               Bundle savedInstanceState) {

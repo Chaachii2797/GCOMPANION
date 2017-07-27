@@ -7,11 +7,11 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/imageHolder"
         android:layout_width="326dp"
         android:layout_height="267dp"
         android:layout_gravity="center"
-        app:srcCompat="@drawable/bottle_piggy_bank"
+        app:srcCompat="@mipmap/bottle_piggy_bank"
         tools:layout_editor_absoluteX="29dp"
         tools:layout_editor_absoluteY="16dp"
         android:background="@drawable/frame_border"
@@ -32,7 +32,7 @@
         tools:layout_editor_absoluteX="109dp"
         tools:layout_editor_absoluteY="294dp"
         android:background="@drawable/frame_border"
-        android:layout_below="@+id/imageView4"
+        android:layout_below="@+id/imageHolder"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="11dp" />
 
