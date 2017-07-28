@@ -1,24 +1,29 @@
 package cabiso.daphny.com.gcompanion;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.util.List;
 
 import cabiso.daphny.com.gcompanion.Fragments.DIYCommunity;
 
@@ -28,14 +33,21 @@ public class UploadImage extends AppCompatActivity implements View.OnClickListen
     private ImageView imgView;
     private Button button;
 
-    private FirebaseStorage storage;
-    private StorageReference storageRef;
-    Uri ImagePathAndName;
-    Bitmap bitmap;
+    private ProgressDialog mProgressDialog;
+    private StorageReference mStorageRef;
+    private String userid;
+    private FirebaseAuth mAuth;
+    private Uri ImagePathAndName;
+    private Bitmap bitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_image);
+
+        mStorageRef = FirebaseStorage.getInstance().getReference("Upload Images");
+        mAuth = FirebaseAuth.getInstance();
+        final FirebaseUser user = mAuth.getCurrentUser();
+        userid = user.getUid();
 
         imgView = (ImageView) findViewById(R.id.imgUpload);
         button = (Button) findViewById(R.id.buttonSave);
@@ -49,20 +61,25 @@ public class UploadImage extends AppCompatActivity implements View.OnClickListen
 
     }
 
-
     @Override
     public void onClick(View v) {
         if (v == button) {
-            Toast.makeText(UploadImage.this, "YEEEEEEEEs!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UploadImage.this, "YEEEEEEEEs!" + userid, Toast.LENGTH_SHORT).show();
 //            uploadImage(ImagePathAndName);
-        }
+//            StorageReference filePath = mStorageRef.child(userid).child(ImagePathAndName.getLastPathSegment());
+            StorageReference filePath = mStorageRef.child(userid).child(ImagePathAndName.getLastPathSegment());
+            showProgressDialog();
+            filePath.putFile(ImagePathAndName).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Toast.makeText(UploadImage.this,"Successfully uploaded image!",Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(UploadImage.this,MainActivity.class);
+                    startActivity(intent);
+                    hideProgressDialog();
+                }
+            });
+        }else{Toast.makeText(UploadImage.this,"Failed to upload image!",Toast.LENGTH_SHORT).show();}
     }
-//
-//    private void uploadImage(Uri ImagePathAndName) {
-//        storage = FirebaseStorage.getInstance();
-//        storageRef = storage.getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-//        storageRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).putFile(ImagePathAndName);
-//    }
 
     private void fetchImage(){
         Intent ImageIntent = new Intent(Intent.ACTION_PICK,
@@ -77,6 +94,20 @@ public class UploadImage extends AppCompatActivity implements View.OnClickListen
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK) {
             ImagePathAndName = data.getData();
             imgView.setImageURI(ImagePathAndName);
+        }
+    }
+
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage(getString(R.string.loading));
+            mProgressDialog.setIndeterminate(true);
+        }
+        mProgressDialog.show();
+    }
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.hide();
         }
     }
 }

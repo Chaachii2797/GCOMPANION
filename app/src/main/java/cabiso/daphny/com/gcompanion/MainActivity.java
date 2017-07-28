@@ -28,6 +28,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -48,6 +51,10 @@ public class MainActivity extends AppCompatActivity
     private Boolean isFabOpen = false;
     private FloatingActionButton fab, fab1, fab2, fab3;
     private Animation fab_open, fab_close, rotate_forward, rotate_backward;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthlistener;
+    private String userid;
+    private String loggedIn;
 
     ImageView imageView;
     private TextView textViewTag;
@@ -80,6 +87,10 @@ public class MainActivity extends AppCompatActivity
 
         imageView = (ImageView) findViewById(R.id.imgSave);
         textViewTag = (TextView) findViewById(R.id.tvTag);
+
+        mAuth = FirebaseAuth.getInstance();
+        final FirebaseUser user = mAuth.getCurrentUser();
+        userid = user.getUid();
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

@@ -59,6 +59,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
                 .build();
 
         firebaseAuth = FirebaseAuth.getInstance();
+
         email = (EditText)findViewById(R.id.etEmail);
         password = (EditText)findViewById(R.id.etPassword);
         signup = (TextView)findViewById(R.id.tvSignup);
@@ -104,6 +105,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
     public void signin(){
         String em = email.getText().toString().trim();
         String pass = password.getText().toString().trim();
+        showProgressDialog();
+
         if(TextUtils.isEmpty(em) && TextUtils.isEmpty(pass)){
             Log.d(TAG,"Signin email: failed!");
             Intent intent = new Intent(Login.this, Login.class);

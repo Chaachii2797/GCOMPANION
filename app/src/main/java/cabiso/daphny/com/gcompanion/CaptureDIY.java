@@ -22,6 +22,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -45,12 +47,13 @@ public class CaptureDIY extends AppCompatActivity implements View.OnClickListene
     private EditText diyName;
     private EditText category;
 
-    private ProgressDialog mProgress;
-    private DatabaseReference mDatabase;
+    private ProgressDialog mProgressDialog;
 
-    private File photoFile = null;
-
-    private static final  int GALLERY_REQUEST =1;
+    private String userid;
+    private FirebaseAuth mAuth;
+    private StorageReference mStorageRef;
+    private Uri ImagePathAndName;
+    private Bitmap bitmap;
 
     private static final int CAMERA_REQUEST_CODE=1;
 
@@ -61,9 +64,12 @@ public class CaptureDIY extends AppCompatActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capture_diy);
 
-        mStorage = FirebaseStorage.getInstance().getReference();
+        mStorageRef = FirebaseStorage.getInstance().getReference("Captured Images");
+        mAuth = FirebaseAuth.getInstance();
+        final FirebaseUser user = mAuth.getCurrentUser();
+        userid = user.getUid();
 
-        mProgress = new ProgressDialog(this);
+        mProgressDialog = new ProgressDialog(this);
         imgViewPhoto = (ImageView) findViewById(R.id.photoSaver);
         btnSave = (Button) findViewById(R.id.btnSave);
         price = (EditText) findViewById(R.id.etPrice);
@@ -90,9 +96,30 @@ public class CaptureDIY extends AppCompatActivity implements View.OnClickListene
     public void onClick(View v) {
         if(v==btnSave){
             Toast.makeText(this,"Clicked!",Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(CaptureDIY.this,MainActivity.class);
-            startActivity(intent);
-        }
+            Toast.makeText(CaptureDIY.this, "YEEEEEEEEs!" + userid, Toast.LENGTH_SHORT).show();
+//            uploadImage(ImagePathAndName);
+//            StorageReference filePath = mStorageRef.child(userid).child(ImagePathAndName.getLastPathSegment());
+            StorageReference filePath = mStorageRef.child(userid).child(bitmap.toString());
+            showProgressDialog();
+            filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Toast.makeText(CaptureDIY.this,"Successfully uploaded image!",Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(CaptureDIY.this,MainActivity.class);
+                    startActivity(intent);
+                    hideProgressDialog();
+                }
+            });
+//            filePath.putFile(ImagePathAndName).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                @Override
+//                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                    Toast.makeText(CaptureDIY.this,"Successfully uploaded image!",Toast.LENGTH_SHORT).show();
+//                    Intent intent = new Intent(CaptureDIY.this,MainActivity.class);
+//                    startActivity(intent);
+//                    hideProgressDialog();
+//                }
+//            });
+        }else{Toast.makeText(CaptureDIY.this,"Failed to upload image!",Toast.LENGTH_SHORT).show();}
     }
 
     //request to capture image!
@@ -102,52 +129,10 @@ public class CaptureDIY extends AppCompatActivity implements View.OnClickListene
             startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
         }
     }
-//    private void startPosting(){
-//        mProgress.setMessage("Posting to blog...");
-//        final String presyo = price.getText().toString().trim();
-//        final String name = diyName.getText().toString().trim();
-//        final String categ = category.getText().toString().trim();
-//        if(!TextUtils.isEmpty(presyo)&&!TextUtils.isEmpty(name) &&! TextUtils.isEmpty(categ)&& mImageUri != null){
-//            mProgress.show();
-//            StorageReference filepath = mStorage.child("Images").child(mImageUri.getLastPathSegment());
-//            filepath.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                @Override
-//                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                    Uri downloadUrl =taskSnapshot.getDownloadUrl();
-//                    DatabaseReference newPost = mDatabase.push();
-//                    newPost.child("Price: ").setValue(presyo);
-//                    newPost.child("DIY Name: ").setValue(name);
-//                    newPost.child("Category: ").setValue(categ);
-//                    newPost.child("Imaage").setValue(downloadUrl.toString());
-//
-//                    mProgress.dismiss();
-////                    startActivity(new Intent(CaptureDIY.this,MainActivity.class));
-//                    startActivity(new Intent(CaptureDIY.this, HomePage.class));
-//                }
-//            }).addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception e) {
-//                    Toast.makeText(CaptureDIY.this,"Uploading failed!",Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//        }
-//    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-//        if(requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
-//
-//            mImageUri = data.getData();
-//            imgViewPhoto.setImageURI(mImageUri);
-//
-//        }
-
-//            CropImage.activity(mImageUri)
-//                    .setGuidelines(CropImageView.Guidelines.ON)
-//                    .setAspectRatio(1,1)
-//                    .start(this);
         if (requestCode == CAMERA_REQUEST_CODE && resultCode ==RESULT_OK){
 //            if (resultCode == MainActivity.RESULT_OK){
                 Bitmap bmp = (Bitmap) data.getExtras().get("data");
@@ -155,7 +140,7 @@ public class CaptureDIY extends AppCompatActivity implements View.OnClickListene
                 bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byte[] byteArray = stream.toByteArray();
                 // convert byte array to Bitmap
-                Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0,
+                bitmap = BitmapFactory.decodeByteArray(byteArray, 0,
                         byteArray.length);
                 imgViewPhoto.setImageBitmap(bitmap);
                 //fragment
@@ -163,5 +148,18 @@ public class CaptureDIY extends AppCompatActivity implements View.OnClickListene
         }
     }
 
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage(getString(R.string.loading));
+            mProgressDialog.setIndeterminate(true);
+        }
+        mProgressDialog.show();
+    }
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.hide();
+        }
+    }
 
 }
