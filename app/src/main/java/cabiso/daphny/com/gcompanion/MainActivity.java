@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private Boolean isFabOpen = false;
-    private FloatingActionButton fab, fab1, fab2;
+    private FloatingActionButton fab, fab1, fab2, fab3;
     private Animation fab_open, fab_close, rotate_forward, rotate_backward;
 
     ImageView imageView;
@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab1 = (FloatingActionButton) findViewById(R.id.fab1);
         fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        fab3 = (FloatingActionButton) findViewById(R.id.fab3);
 
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
@@ -121,6 +122,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(this);
         fab1.setOnClickListener(this);
         fab2.setOnClickListener(this);
+        fab3.setOnClickListener(this);
 
 
         fab1.setOnClickListener(new View.OnClickListener() {
@@ -151,6 +153,18 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        fab3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,UploadImage.class);
+                startActivity(intent);
+
+                //   TODO: Snack bar for camera permission
+                Snackbar.make(v, "Waiting.......", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
     }
 
     @Override
@@ -158,7 +172,6 @@ public class MainActivity extends AppCompatActivity
         int id = v.getId();
         switch (id){
             case R.id.fab:
-
                 animateFAB();
                 break;
             case R.id.fab1:
@@ -169,6 +182,9 @@ public class MainActivity extends AppCompatActivity
 
                 Log.d("CaptureDIY", "Fab 2");
                 break;
+            case  R.id.fab3:
+                Log.d("UploadImage", "Fab 3");
+                break;
         }
     }
 
@@ -178,16 +194,20 @@ public class MainActivity extends AppCompatActivity
             fab.startAnimation(rotate_backward);
             fab1.startAnimation(fab_close);
             fab2.startAnimation(fab_close);
+            fab3.startAnimation(fab_close);
             fab1.setClickable(false);
             fab2.setClickable(false);
+            fab3.setClickable(false);
             isFabOpen = false;
             Log.d("CaptureDIY", "close");
         } else {
             fab.startAnimation(rotate_forward);
             fab1.startAnimation(fab_open);
             fab2.startAnimation(fab_open);
+            fab3.startAnimation(fab_open);
             fab1.setClickable(true);
             fab2.setClickable(true);
+            fab3.setClickable(true);
             isFabOpen = true;
             Log.d("CaptureDIY","open");
 

@@ -2,9 +2,11 @@ package cabiso.daphny.com.gcompanion;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,9 +23,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class Login extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener{
 
@@ -38,6 +42,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
     private static final int RC_SIGN_IN = 007;
     private GoogleApiClient mGoogleApiClient;
     private ProgressDialog mProgressDialog;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +58,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        // Customizing G+ button
-//        btnSignIn.setSize(SignInButton.SIZE_STANDARD);
-//        btnSignIn.setScopes(gso.getScopeArray());
-
         firebaseAuth = FirebaseAuth.getInstance();
         email = (EditText)findViewById(R.id.etEmail);
         password = (EditText)findViewById(R.id.etPassword);
@@ -70,11 +71,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
 
     private void signInGoogle() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
         if(signInIntent!=null){
-            Intent intent = new Intent(Login.this,MainActivity.class);
-            startActivity(intent);
-            Toast.makeText(this,"na Login sha!.. PRETTY",Toast.LENGTH_SHORT).show();
+            startActivityForResult(signInIntent, RC_SIGN_IN);
+            if(signInIntent.equals(RC_SIGN_IN)){
+                Intent intent = new Intent(Login.this,MainActivity.class);
+                startActivity(intent);
+                Toast.makeText(this,"na Login sha!.. PRETTY",Toast.LENGTH_SHORT).show();
+            }
         }else{
             Toast.makeText(this,"WALA na Login sha!.. BATIG NAWNG",Toast.LENGTH_SHORT).show();
         }
@@ -101,23 +104,38 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
     public void signin(){
         String em = email.getText().toString().trim();
         String pass = password.getText().toString().trim();
-
-        firebaseAuth.signInWithEmailAndPassword(em, pass)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG,"Signin with email: onComplete" + task.isSuccessful());
-                        if(!task.isSuccessful()){
-                            Log.d(TAG,"Signin email: failed!" + task.getException());
-                            Toast.makeText(Login.this, "Logging in failed!", Toast.LENGTH_SHORT).show();
+        if(TextUtils.isEmpty(em) && TextUtils.isEmpty(pass)){
+            Log.d(TAG,"Signin email: failed!");
+            Intent intent = new Intent(Login.this, Login.class);
+            startActivity(intent);
+        }else{
+            firebaseAuth.signInWithEmailAndPassword(em, pass)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            Log.d(TAG,"Signin with email: onComplete" + task.isSuccessful());
+                            if(!task.isSuccessful()){
+                                Log.d(TAG,"Signin email: failed!" + task.getException());
+                                Toast.makeText(Login.this, "Logging in failed!", Toast.LENGTH_SHORT).show();
+                            }
+                            else if (task.isSuccessful()){
+                                Intent intent = new Intent(Login.this, MainActivity.class);
+                                startActivity(intent);
+                            }
                         }
-                        else if (task.isSuccessful()){
-                            Intent intent = new Intent(Login.this, MainActivity.class);
-                            startActivity(intent);
-                        }
-                    }
-                });
+                    });
         }
+    }
+
+    private void getCurrentUser(){
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user!=null){
+            String name = user.getDisplayName();
+            String email = user.getEmail();
+            Uri photoUrl = user.getPhotoUrl();
+            String uid = user.getUid();
+        }
+    }
 
 
     @Override
@@ -125,7 +143,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
         if (v==login){
             Intent intent = new Intent(Login.this, MainActivity.class);
             startActivity(intent);
-//            signin();
+            signin();
         }else if(v==signup){
             Intent intent = new Intent(Login.this, Signup.class);
             startActivity(intent);

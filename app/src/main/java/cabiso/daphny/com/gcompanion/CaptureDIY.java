@@ -89,7 +89,9 @@ public class CaptureDIY extends AppCompatActivity implements View.OnClickListene
     @Override
     public void onClick(View v) {
         if(v==btnSave){
-            Toast.makeText(CaptureDIY.this,"Button Clicked!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Clicked!",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(CaptureDIY.this,MainActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -135,6 +137,17 @@ public class CaptureDIY extends AppCompatActivity implements View.OnClickListene
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+//        if(requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
+//
+//            mImageUri = data.getData();
+//            imgViewPhoto.setImageURI(mImageUri);
+//
+//        }
+
+//            CropImage.activity(mImageUri)
+//                    .setGuidelines(CropImageView.Guidelines.ON)
+//                    .setAspectRatio(1,1)
+//                    .start(this);
         if (requestCode == CAMERA_REQUEST_CODE && resultCode ==RESULT_OK){
 //            if (resultCode == MainActivity.RESULT_OK){
                 Bitmap bmp = (Bitmap) data.getExtras().get("data");

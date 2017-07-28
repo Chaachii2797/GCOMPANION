@@ -20,6 +20,8 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
+        android:largeHeap="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -35,10 +37,10 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".Login" />
         <activity android:name=".Signup" />
         <activity android:name=".MainActivity" />
@@ -52,6 +54,7 @@
         <activity android:name=".About" />
         <activity android:name=".HomePicture1" />
         <activity android:name=".HomePicture2" />
+        <activity android:name=".UploadImage"></activity>
     </application>
 
 </manifest>

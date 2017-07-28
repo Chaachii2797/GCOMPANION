@@ -20,6 +20,9 @@ public class DIYCommunity extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_diys, container, false);
+
+//        byte[] byteArray = getArgument().getByteArrayExtra("image");
+//        Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
         return view;
     }
 
