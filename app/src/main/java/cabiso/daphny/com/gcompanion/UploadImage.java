@@ -1,15 +1,13 @@
 package cabiso.daphny.com.gcompanion;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,13 +15,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
-import java.util.List;
 
 import cabiso.daphny.com.gcompanion.Fragments.DIYCommunity;
 
@@ -45,9 +39,9 @@ public class UploadImage extends AppCompatActivity implements View.OnClickListen
         setContentView(R.layout.activity_upload_image);
 
         mStorageRef = FirebaseStorage.getInstance().getReference("Upload Images");
-        mAuth = FirebaseAuth.getInstance();
-        final FirebaseUser user = mAuth.getCurrentUser();
-        userid = user.getUid();
+     //   mAuth = FirebaseAuth.getInstance();
+       // final FirebaseUser user = mAuth.getCurrentUser();
+      //  userid = user.getUid();
 
         imgView = (ImageView) findViewById(R.id.imgUpload);
         button = (Button) findViewById(R.id.buttonSave);
@@ -67,7 +61,7 @@ public class UploadImage extends AppCompatActivity implements View.OnClickListen
             Toast.makeText(UploadImage.this, "YEEEEEEEEs!" + userid, Toast.LENGTH_SHORT).show();
 //            uploadImage(ImagePathAndName);
 //            StorageReference filePath = mStorageRef.child(userid).child(ImagePathAndName.getLastPathSegment());
-            StorageReference filePath = mStorageRef.child(userid).child(ImagePathAndName.getLastPathSegment());
+            StorageReference filePath = mStorageRef.child(ImagePathAndName.getLastPathSegment());
             showProgressDialog();
             filePath.putFile(ImagePathAndName).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override

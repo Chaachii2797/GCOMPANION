@@ -29,14 +29,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 
 import cabiso.daphny.com.gcompanion.Fragments.DIYCommunity;
-import cabiso.daphny.com.gcompanion.Fragments.HomePage;
 import cabiso.daphny.com.gcompanion.Fragments.Notification;
 import cabiso.daphny.com.gcompanion.Fragments.Promos;
 import clarifai2.api.ClarifaiBuilder;
@@ -88,9 +86,9 @@ public class MainActivity extends AppCompatActivity
         imageView = (ImageView) findViewById(R.id.imgSave);
         textViewTag = (TextView) findViewById(R.id.tvTag);
 
-        mAuth = FirebaseAuth.getInstance();
-        final FirebaseUser user = mAuth.getCurrentUser();
-        userid = user.getUid();
+     //   mAuth = FirebaseAuth.getInstance();
+       // final FirebaseUser user = mAuth.getCurrentUser();
+        //userid = user.getUid();
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -287,13 +285,13 @@ public class MainActivity extends AppCompatActivity
         @Override
         public Fragment getItem(int position) {
             switch (position){
+               // case 0:
+                 //   return new HomePage();
                 case 0:
-                    return new HomePage();
-                case 1:
                     return new DIYCommunity();
-                case 2:
+                case 1:
                     return new Promos();
-                case 3:
+                case 2:
                     return new Notification();
             }
             return null;
@@ -301,7 +299,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public int getCount() {
-            return 4;
+            return 3;
         }
 
 

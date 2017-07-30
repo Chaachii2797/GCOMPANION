@@ -3,37 +3,27 @@ package cabiso.daphny.com.gcompanion;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
+import cabiso.daphny.com.gcompanion.Model.DIYDetails;
 
-import cabiso.daphny.com.gcompanion.Fragments.HomePage;
-import cabiso.daphny.com.gcompanion.Fragments.ImageHolder;
 
 /**
  * Created by Lenovo on 7/23/2017.
@@ -46,28 +36,35 @@ public class CaptureDIY extends AppCompatActivity implements View.OnClickListene
     private EditText price;
     private EditText diyName;
     private EditText category;
+    private  Button btnShow;
 
     private ProgressDialog mProgressDialog;
+   // private String mUsername;
 
-    private String userid;
-    private FirebaseAuth mAuth;
+    private DatabaseReference databaseReference;
+    private FirebaseStorage mStorage;
     private StorageReference mStorageRef;
-    private Uri ImagePathAndName;
+    private Uri mImageUrl ;
     private Bitmap bitmap;
+    private FirebaseDatabase database;
 
     private static final int CAMERA_REQUEST_CODE=1;
 
-    private StorageReference mStorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capture_diy);
 
-        mStorageRef = FirebaseStorage.getInstance().getReference("Captured Images");
-        mAuth = FirebaseAuth.getInstance();
-        final FirebaseUser user = mAuth.getCurrentUser();
-        userid = user.getUid();
+        database = FirebaseDatabase.getInstance();
+        mStorage = FirebaseStorage.getInstance();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("DIY_Details").push();
+        mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://gcomp-8e552.appspot.com/").child("add_DIY");
+
+        //mAuth = FirebaseAuth.getInstance();
+       // final FirebaseUser user = mAuth.getCurrentUser();
+        //userid = user.getUid();
 
         mProgressDialog = new ProgressDialog(this);
         imgViewPhoto = (ImageView) findViewById(R.id.photoSaver);
@@ -75,52 +72,58 @@ public class CaptureDIY extends AppCompatActivity implements View.OnClickListene
         price = (EditText) findViewById(R.id.etPrice);
         diyName = (EditText) findViewById(R.id.etName);
         category = (EditText) findViewById(R.id.etCategory);
+      //  btnShow = (Button) findViewById(R.id.btnShow);
 
         btnSave.setOnClickListener(this);
-//        btnSave.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                Toast.makeText(getApplication(),"savesavesavesave!",Toast.LENGTH_SHORT).show();
-////                Intent intent = new Intent(CaptureDIY.this,MainActivity.class);
-////                startActivity(intent);
-//                startPosting();
-////                Intent intent = new Intent(Intent.ACTION_PICK);
-////                intent.setType("image");
-////                startActivityForResult(intent,GALLERY_INTENT);
-//            }
-//        });
+      //  btnShow.setOnClickListener(this);
+
         dispatchTakePictureIntent();
+     /*  btnShow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CaptureDIY.this,HomePageActivity.class);
+                startActivity(intent);
+            }
+        });*/
     }
+
+
 
     @Override
     public void onClick(View v) {
-        if(v==btnSave){
-            Toast.makeText(this,"Clicked!",Toast.LENGTH_SHORT).show();
-            Toast.makeText(CaptureDIY.this, "YEEEEEEEEs!" + userid, Toast.LENGTH_SHORT).show();
-//            uploadImage(ImagePathAndName);
-//            StorageReference filePath = mStorageRef.child(userid).child(ImagePathAndName.getLastPathSegment());
-            StorageReference filePath = mStorageRef.child(userid).child(bitmap.toString());
-            showProgressDialog();
-            filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    Toast.makeText(CaptureDIY.this,"Successfully uploaded image!",Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(CaptureDIY.this,MainActivity.class);
-                    startActivity(intent);
-                    hideProgressDialog();
-                }
-            });
-//            filePath.putFile(ImagePathAndName).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                @Override
-//                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                    Toast.makeText(CaptureDIY.this,"Successfully uploaded image!",Toast.LENGTH_SHORT).show();
-//                    Intent intent = new Intent(CaptureDIY.this,MainActivity.class);
-//                    startActivity(intent);
-//                    hideProgressDialog();
-//                }
-//            });
-        }else{Toast.makeText(CaptureDIY.this,"Failed to upload image!",Toast.LENGTH_SHORT).show();}
+
+        String dName = diyName.getText().toString();
+        String dPrice = price.getText().toString();
+        String dCategory = category.getText().toString();
+
+        Intent intent = new Intent(CaptureDIY.this,HomePageActivity.class);
+        startActivity(intent);
+
+        DIYDetails details = new DIYDetails(dName, dPrice, dCategory);
+        databaseReference.push().setValue(details);
+
+        price.setText("");
+        diyName.setText("");
+        category.setText("");
+
+
+        if (dName.isEmpty()) {
+            Toast.makeText(getApplicationContext(), "Price?", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (dPrice.isEmpty()){
+            Toast.makeText(getApplicationContext(), "DIY name?", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (dCategory.isEmpty()){
+            Toast.makeText(getApplicationContext(), "Category?", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Toast.makeText(getApplicationContext(), "Updated Info", Toast.LENGTH_SHORT).show();
+
     }
+
 
     //request to capture image!
     private void dispatchTakePictureIntent(){
@@ -130,12 +133,40 @@ public class CaptureDIY extends AppCompatActivity implements View.OnClickListene
         }
     }
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == CAMERA_REQUEST_CODE && resultCode ==RESULT_OK){
+            mImageUrl = data.getData();
+            imgViewPhoto.setImageURI(mImageUrl);
+
+            StorageReference filePath = mStorageRef.child(mImageUrl.getLastPathSegment());
+
+            mProgressDialog.setMessage("Uploading image....");
+            mProgressDialog.show();
+
+            filePath.putFile(mImageUrl).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Uri downloadUrl =taskSnapshot.getDownloadUrl();
+
+                  //  DIYDetails details = new DIYDetails(null, mUsername, downloadUrl.toString());
+                   databaseReference.child("Image_URL").setValue(downloadUrl.toString());
+
+                    Glide.with(getApplicationContext())
+                            .load(downloadUrl)
+                            .crossFade()
+                            .placeholder(R.drawable.add)
+                            .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                            .into(imgViewPhoto);
+                    Toast.makeText(getApplicationContext(), "Updated", Toast.LENGTH_SHORT).show();
+                    mProgressDialog.dismiss();
+                }
+            });
+
+
 //            if (resultCode == MainActivity.RESULT_OK){
-                Bitmap bmp = (Bitmap) data.getExtras().get("data");
+               /* Bitmap bmp = (Bitmap) data.getExtras().get("data");
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byte[] byteArray = stream.toByteArray();
@@ -144,11 +175,23 @@ public class CaptureDIY extends AppCompatActivity implements View.OnClickListene
                         byteArray.length);
                 imgViewPhoto.setImageBitmap(bitmap);
                 //fragment
-//            }
+//            }  */
         }
     }
 
-    private void showProgressDialog() {
+
+
+
+
+
+
+
+
+
+
+
+
+    /*private void showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
             mProgressDialog.setMessage(getString(R.string.loading));
@@ -160,6 +203,8 @@ public class CaptureDIY extends AppCompatActivity implements View.OnClickListene
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.hide();
         }
-    }
+    }*/
+
+
 
 }
